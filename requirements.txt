@@ -1,0 +1,14 @@
+gunicorn
+python-dotenv
+waitress
+tensorflow==2.20.0
+opencv-python
+matplotlib
+tqdm
+flask
+pillow
+numpy
+# Tools for running/executing notebooks
+nbconvert
+ipykernel
+notebook
