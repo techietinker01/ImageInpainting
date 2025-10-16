@@ -20,7 +20,7 @@ APP_CREDIT = 'Built by Rupam Kumari'
 # Paths and config via environment variables (safer for production)
 UPLOAD_DIR = os.environ.get('UPLOAD_DIR', 'uploads')
 OUTPUT_DIR = os.environ.get('OUTPUT_DIR', 'outputs')
-SAVED_MODEL_DIR = os.environ.get('MODEL_DIR', os.path.join('saved_models', 'generator_saved_model'))
+SAVED_MODEL_PATH = os.environ.get('MODEL_PATH', 'saved_model.h5')  # H5 file path
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -39,21 +39,17 @@ def try_load_model():
         print('TensorFlow not available')
         return False
     try:
-        if os.path.exists(SAVED_MODEL_DIR):
-            # Keras 3 requires TFSMLayer for SavedModel format
-            _model = tf.keras.layers.TFSMLayer(SAVED_MODEL_DIR, call_endpoint='serving_default')
-            print('Loaded SavedModel from', SAVED_MODEL_DIR)
+        if os.path.exists(SAVED_MODEL_PATH):
+            # Load Keras H5 model
+            _model = tf.keras.models.load_model(SAVED_MODEL_PATH, compile=False)
+            print(f'Loaded Keras H5 model from {SAVED_MODEL_PATH}')
             return True
+        else:
+            print(f'Model file not found at {SAVED_MODEL_PATH}')
+            return False
     except Exception as e:
-        print('Failed to load model:', e)
-        try:
-            # Fallback: try loading as regular SavedModel
-            _model = tf.saved_model.load(SAVED_MODEL_DIR)
-            print('Loaded SavedModel using tf.saved_model.load from', SAVED_MODEL_DIR)
-            return True
-        except Exception as e2:
-            print('Fallback loading also failed:', e2)
-    return False
+        print(f'Failed to load model: {e}')
+        return False
 
 
 @app.route('/')
@@ -112,25 +108,10 @@ def upload_mask():
             if inp.ndim == 3:
                 inp = np.expand_dims(inp, 0)
 
-            # Run model prediction
-            if hasattr(_model, 'predict'):
-                # Keras model
-                pred = _model.predict(inp)
-            elif hasattr(_model, '__call__'):
-                # TFSMLayer or tf.saved_model
-                pred = _model(inp)
-                if isinstance(pred, dict):
-                    # TFSMLayer returns dict, get the output
-                    pred = list(pred.values())[0]
-            else:
-                # tf.saved_model.load result
-                pred = _model.signatures['serving_default'](tf.constant(inp))
-                pred = list(pred.values())[0]
+            # Run model prediction with H5 model
+            pred = _model.predict(inp, verbose=0)
 
-            # Convert to numpy if tensor
-            if hasattr(pred, 'numpy'):
-                pred = pred.numpy()
-            
+            # Convert prediction to image
             out = (np.clip(pred[0], 0, 1) * 255).astype('uint8')
             out_img = Image.fromarray(out)
 
@@ -194,11 +175,18 @@ def upload_mask():
 
 @app.route('/api/status')
 def status():
-    return jsonify({'status': 'ok', 'model_available': _model is not None})
+    return jsonify({
+        'status': 'ok', 
+        'model_available': _model is not None,
+        'model_path': SAVED_MODEL_PATH,
+        'tensorflow_available': TF_AVAILABLE
+    })
 
 
 if __name__ == '__main__':
     # Run on 0.0.0.0 for external access on your network
     print(f"\n=== {APP_CREDIT} ===\n")
+    print(f"Looking for model at: {SAVED_MODEL_PATH}")
+    print(f"TensorFlow available: {TF_AVAILABLE}")
     # In production, Render (or your host) will set PORT in the environment
     app.run(debug=False, host='0.0.0.0', port=APP_PORT)
