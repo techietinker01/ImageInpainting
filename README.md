@@ -117,7 +117,7 @@ python app.py
 
 ### Option 2: Gmail OTP (Production)
 
-**1. Create Gmail App Password**
+**1. Create Gmail App Password:**
 
 - Go to [Google Account Security](https://myaccount.google.com/security)
 - Enable 2-Step Verification
@@ -125,7 +125,7 @@ python app.py
 - Select "Mail" and "Windows" (or your OS)
 - Copy the 16-digit password
 
-**2. Configure .env File**
+**2. Configure .env File:**
 
 ```env
 SMTP_SERVER=smtp.gmail.com
@@ -135,7 +135,7 @@ SMTP_PASSWORD=your-16-digit-app-password
 SECRET_KEY=your-random-secret-key
 ```
 
-**3. Restart Server**
+**3. Restart Server:**
 
 ```bash
 python app.py
@@ -358,7 +358,7 @@ ImageInpainting/
 
 ### Common Issues
 
-**Issue: "ERR_NGROK_3200 - endpoint offline"**
+**Issue: "ERR_NGROK_3200 - endpoint offline":**
 
 Solution: Restart both Flask and ngrok
 
@@ -367,14 +367,14 @@ python app.py
 ngrok http 5000
 ```
 
-**Issue: OTP not receiving in email**
+**Issue: OTP not receiving in email:**
 
 - Check spam folder
 - Verify Gmail App Password (16 digits, no spaces)
 - Ensure 2-Step Verification is enabled
 - Check .env file configuration
 
-**Issue: "Module not found" error**
+**Issue: "Module not found" error:**
 
 Solution: Activate virtual environment
 
@@ -386,7 +386,7 @@ Solution: Activate virtual environment
 source .venv/bin/activate
 ```
 
-**Issue: TensorFlow import errors on Python 3.13**
+**Issue: TensorFlow import errors on Python 3.13:**
 
 - Solution: Use Python 3.9-3.11
 - App will fallback to OpenCV if TensorFlow unavailable
@@ -451,7 +451,7 @@ Free to use, modify, and distribute!
 
 ## 👩‍💻 Author
 
-**Rupam Kumari (techietinker01)**
+**Rupam Kumari (techietinker01):**
 
 - GitHub: [@techietinker01](https://github.com/techietinker01)
 - Project: [ImageInpainting](https://github.com/techietinker01/ImageInpainting)
