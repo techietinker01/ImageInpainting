@@ -1,64 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Image Inpainting</title>
-  <link rel="stylesheet" href="/static/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Inpainting - Sign In</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .page-title {
+      color: white;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+    }
+    .auth-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+    .auth-container h2 {
+      color: #2f3640;
+      margin-bottom: 10px;
+      font-size: 1.8em;
+    }
+    .auth-container p {
+      color: #7f8c8d;
+      margin-bottom: 30px;
+      font-size: 0.95em;
+    }
+    input[type="email"], input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    input[type="email"]:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    button:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .hidden {
+      display: none;
+    }
+    .message {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .message.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .resend-link {
+      color: #667eea;
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 14px;
+    }
+    .resend-link:hover {
+      color: #764ba2;
+    }
+    .footer-text {
+      margin-top: 20px;
+      color: white;
+      font-size: 14px;
+      text-align: center;
+    }
+    .back-link {
+      color: #667eea;
+      background: white;
+      padding: 5px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 14px;
+      display: inline-block;
+      margin-top: 15px;
+    }
+    .back-link:hover {
+      background: #f8f9fa;
+    }
+    .remember-me {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #2f3640;
+    }
+    .remember-me input[type="checkbox"] {
+      width: auto;
+      margin-right: 8px;
+      margin-bottom: 0;
+    }
+  </style>
 </head>
 <body>
-  <h1>🖌️ Image Inpainting 🎨</h1>
-
-  <div id="container">
-    <!-- Upload Section -->
-    <div class="panel upload-panel">
-  <h3>1️⃣ Upload Image</h3>
-  <div class="upload-wrapper">
-    <label for="imageUpload" class="upload-btn">📤 Upload Image</label>
-    <input type="file" id="imageUpload" accept="image/*" hidden>
-  </div>
-</div>
-
-    <!-- Mask Drawing Section -->
-    <div class="panel">
-      <h3>2️⃣ Highlight the object you want to Remove</h3>
-
-      <div class="toolbar">
-        <label for="tool">Tool:</label>
-        <select id="tool">
-          <option value="brush">🖌️ Brush</option>
-          <option value="eraser">🩹 Eraser</option>
-        </select>
-
-        <label for="brushSize">Size:</label>
-        <input type="range" id="brushSize" min="5" max="50" value="15">
-        <span id="sizeValue">15</span>px
+  <h1 class="page-title">🖌️ IMAGE INPAINTING 🎨</h1>
+  
+  <div class="main-container">
+    <div class="auth-container">
+      <!-- Email Form (Step 1) -->
+      <div id="emailForm">
+        <h2>Welcome!</h2>
+        <p>Enter your email to sign in or create an account</p>
+        <div id="emailMessage" class="message hidden"></div>
+        <form onsubmit="sendOTP(event)">
+          <input type="email" id="emailInput" placeholder="Enter your email" required>
+          <button type="submit" id="sendOtpBtn">Send OTP</button>
+        </form>
       </div>
 
-      <canvas id="maskCanvas" width="300" height="300"></canvas>
-
-      <div id="buttons">
-        <button id="resetBtn">Clear</button>
-        <button id="showResult">Show Highlighted Object</button>
-        <button id="sendBtn">Generate Image</button>
-      </div>
-    </div>
-
-    <!-- Result Section -->
-    <div class="panel">
-      <h3>3️⃣ Generated Image</h3>
-      <canvas id="resultCanvas" width="300" height="300"></canvas>
-      <p id="responseText"></p>
-      <div id="downloadSection">
-        <button id="downloadBtn">💾 Download Image</button>
+      <!-- OTP Form (Step 2) -->
+      <div id="otpForm" class="hidden">
+        <h2>Verify OTP</h2>
+        <p>We've sent a 6-digit code to <strong id="userEmail"></strong></p>
+        <div id="otpMessage" class="message hidden"></div>
+        <form onsubmit="verifyOTP(event)">
+          <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" pattern="[0-9]{6}" required>
+          <div class="remember-me">
+            <input type="checkbox" id="rememberMe" checked>
+            <label for="rememberMe">Remember me for 30 days</label>
+          </div>
+          <button type="submit" id="verifyBtn">Verify & Continue</button>
+        </form>
+        <p>
+          Didn't receive code? 
+          <span class="resend-link" onclick="resendOTP()">Resend OTP</span>
+        </p>
+        <a href="#" class="back-link" onclick="backToEmail()">← Change Email</a>
       </div>
     </div>
   </div>
 
-  <footer class="app-footer">
-    Built by <strong>Rupam Kumari</strong>
-  </footer>
+  <p class="footer-text">
+    Built by Rupam Kumari
+  </p>
 
-  <script src="/static/main.js"></script>
+  <script>
+    let userEmail = '';
+
+    // Check if user is already logged in on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch('/api/check-auth')
+        .then(response => response.json())
+        .then(data => {
+          if (data.logged_in) {
+            // User already logged in, redirect to app
+            window.location.href = '/app';
+          }
+        })
+        .catch(error => console.error('Auth check error:', error));
+    });
+
+    // Send OTP
+    function sendOTP(event) {
+      event.preventDefault();
+      const email = document.getElementById('emailInput').value;
+      userEmail = email;
+      
+      const btn = document.getElementById('sendOtpBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      // Call backend API to send OTP
+      fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showMessage('emailMessage', 'OTP sent successfully! Check your email.', 'success');
+          setTimeout(() => {
+            document.getElementById('emailForm').classList.add('hidden');
+            document.getElementById('otpForm').classList.remove('hidden');
+            document.getElementById('userEmail').textContent = email;
+          }, 1000);
+        } else {
+          showMessage('emailMessage', data.message || 'Failed to send OTP. Please try again.', 'error');
+        }
+      })
+      .catch(error => {
+        showMessage('emailMessage', 'Network error. Please try again.', 'error');
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = 'Send OTP';
+      });
+    }
+
+    // Verify OTP
+    function verifyOTP(event) {
+      event.preventDefault();
+      const otp = document.getElementById('otpInput').value;
+      const rememberMe = document.getElementById('rememberMe').checked;
+      
+      const btn = document.getElementById('verifyBtn');
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+
+      // Call backend API to verify OTP
+      fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: userEmail, 
+          otp: otp,
+          remember_me: rememberMe 
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showMessage('otpMessage', 'Verified! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = '/app';
+          }, 1000);
+        } else {
+          showMessage('otpMessage', data.message || 'Invalid OTP. Please try again.', 'error');
+        }
+      })
+      .catch(error => {
+        showMessage('otpMessage', 'Network error. Please try again.', 'error');
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = 'Verify & Continue';
+      });
+    }
+
+    // Resend OTP
+    function resendOTP() {
+      fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showMessage('otpMessage', 'OTP resent successfully!', 'success');
+        } else {
+          showMessage('otpMessage', 'Failed to resend OTP.', 'error');
+        }
+      });
+    }
+
+    // Back to email form
+    function backToEmail() {
+      document.getElementById('otpForm').classList.add('hidden');
+      document.getElementById('emailForm').classList.remove('hidden');
+      document.getElementById('emailInput').value = userEmail;
+      document.getElementById('otpInput').value = '';
+    }
+
+    // Show message helper
+    function showMessage(elementId, message, type) {
+      const msgElement = document.getElementById(elementId);
+      msgElement.textContent = message;
+      msgElement.className = `message ${type}`;
+      msgElement.classList.remove('hidden');
+      
+      setTimeout(() => {
+        msgElement.classList.add('hidden');
+      }, 5000);
+    }
+  </script>
 </body>
 </html>

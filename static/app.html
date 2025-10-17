@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Inpainting</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <h1>🖌️ Image Inpainting 🎨</h1>
+
+  <div id="container">
+    <!-- Upload Section -->
+    <div class="panel upload-panel">
+  <h3>1️⃣ Upload Image</h3>
+  <div class="upload-wrapper">
+    <label for="imageUpload" class="upload-btn">📤 Upload Image</label>
+    <input type="file" id="imageUpload" accept="image/*" hidden>
+  </div>
+</div>
+
+    <!-- Mask Drawing Section -->
+    <div class="panel">
+      <h3>2️⃣ Highlight the object you want to Remove</h3>
+
+      <div class="toolbar">
+        <label for="tool">Tool:</label>
+        <select id="tool">
+          <option value="brush">🖌️ Brush</option>
+          <option value="eraser">🩹 Eraser</option>
+        </select>
+
+        <label for="brushSize">Size:</label>
+        <input type="range" id="brushSize" min="5" max="50" value="15">
+        <span id="sizeValue">15</span>px
+      </div>
+
+      <canvas id="maskCanvas" width="300" height="300"></canvas>
+
+      <div id="buttons">
+        <button id="resetBtn">Clear</button>
+        <button id="showResult">Show Highlighted Object</button>
+        <button id="sendBtn">Generate Image</button>
+      </div>
+    </div>
+
+    <!-- Result Section -->
+    <div class="panel">
+      <h3>3️⃣ Generated Image</h3>
+      <canvas id="resultCanvas" width="300" height="300"></canvas>
+      <p id="responseText"></p>
+      <div id="downloadSection">
+        <button id="downloadBtn">💾 Download Image</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    Built by <strong>Rupam Kumari</strong>
+  </footer>
+
+  <script src="/static/main.js"></script>
+</body>
+</html>
