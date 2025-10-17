@@ -37,7 +37,8 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Other configurable values
-APP_PORT = int(os.environ.get('PORT', 5001))  # Different port for app2
+# app2.py uses port 5001 (hardcoded to avoid conflict with app.py on port 5000)
+APP_PORT = 5001
 
 # OTP Storage (in production, use Redis or database)
 otp_storage = {}  # {email: {'otp': '123456', 'expires': datetime, 'attempts': 0}}
