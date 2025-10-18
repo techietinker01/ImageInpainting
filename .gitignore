@@ -8,20 +8,12 @@ __pycache__/
 # Virtual environments
 .venv/
 venv/
-ENV/
 env/
-.venv-tf/
-env.bak/
-venv.bak/
-
-# Jupyter Notebook
-.ipynb_checkpoints/
-*.ipynb_checkpoints
+ENV/
 
 # Environment variables
 .env
 .env.local
-.env.*.local
 
 # IDEs
 .vscode/
@@ -29,57 +21,31 @@ venv.bak/
 *.swp
 *.swo
 *~
+
+# Operating System
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
 
 # Project-specific: Large model files
 saved_models/
-saved_model.h5
-*.h5
-*.hdf5
 *.pb
-*.ckpt
-*.keras
+*.h5
 
 # Project-specific: Generated/uploaded content
 uploads/
 outputs/
 color/
-
-# Project-specific: Dataset folders (if you have training data)
-data/
-datasets/
-train/
-test/
-val/
+test_output.png
 
 # Logs
 *.log
 logs/
 
-# Distribution / packaging
-build/
-dist/
-*.egg-info/
-.eggs/
-
-# pytest
-.pytest_cache/
-.coverage
-htmlcov/
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Archives
-*.zip
-*.tar.gz
-*.rar
-*.7z
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
+# Ngrok
+ngrok.exe
+ngrok.yml
