@@ -306,16 +306,32 @@ def upload_mask():
     # Try to load model if available
     if try_load_model():
         try:
-            # Resize to 256x256 (model expects this size)
+            # The model was trained with masked images (black strokes on colored image)
+            # Convert the mask image to match training data format
+            # mask_img has white background with black strokes where user drew
+            
+            # Resize original and mask to 256x256
+            orig_resized = orig_img.resize((256, 256), Image.LANCZOS)
             mask_resized = mask_img.resize((256, 256), Image.LANCZOS)
             
-            # Preprocess to numpy array in [0,1]
-            inp = np.array(mask_resized).astype('float32') / 255.0
+            # Convert to numpy arrays
+            orig_np = np.array(orig_resized).astype('float32') / 255.0
+            mask_np = np.array(mask_resized).astype('float32') / 255.0
+            
+            # Create binary mask: white pixels (where user drew) = 0, black pixels = 1
+            # Convert mask to grayscale and invert
+            mask_gray = cv2.cvtColor((mask_np * 255).astype('uint8'), cv2.COLOR_RGB2GRAY)
+            binary_mask = (mask_gray < 128).astype('float32')  # Invert: black strokes = 1
+            
+            # Apply mask to original image (set masked regions to black, like training data)
+            binary_mask_3ch = np.stack([binary_mask, binary_mask, binary_mask], axis=-1)
+            masked_input = orig_np * binary_mask_3ch
+            
             # Ensure shape (1, 256, 256, 3)
-            if inp.ndim == 3:
-                inp = np.expand_dims(inp, 0)
+            inp = np.expand_dims(masked_input, 0)
 
             print(f'Input shape: {inp.shape}, dtype: {inp.dtype}, range: [{inp.min()}, {inp.max()}]')
+            print(f'Mask coverage: {(1 - binary_mask.mean()) * 100:.1f}% masked')
 
             # Run model prediction
             pred = _model.predict(inp, verbose=0)
@@ -336,6 +352,11 @@ def upload_mask():
 
             out_path = os.path.join(OUTPUT_DIR, 'inpainted_h5.png')
             out_img.save(out_path)
+            
+            # Also save the masked input for debugging
+            masked_debug = (masked_input * 255).astype('uint8')
+            Image.fromarray(masked_debug).save(os.path.join(OUTPUT_DIR, 'debug_masked_input.png'))
+            
             print(f'✅ Saved inpainted image to {out_path}')
 
             # Return the image bytes
